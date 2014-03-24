@@ -63,26 +63,22 @@ double getTimeStamp(void) {                     //akzepier i dass des die zeit i
 int main( int argc, char *argv[] ) {
     /*################ PREPERATIONS (boring) ################*/
     /* declarations */
-    unsigned int    boxcount=20,       //how many boxes there are
-                    repetitions=500,    //how many experiments to be made
+    unsigned int    boxcount,       //how many boxes there are
+                    repetitions,    //how many experiments to be made
                     *boxes,         //contents of each box
                     i, j,           //iterators
                     tmpwalk=0;        //coordinate of current iteration
     double          time;           //time for clocking the program
-    FILE *f;
-    
-    if(f==NULL) 
-    {
-        return -1;                         
-    }
+    double prob;
     
     /* argument handling */
-    if( argc < 3 ) {
+    if(argc<3) {
         printf("Usage: %s repetitions boxes\n", argv[0]);
         return -1;
     }
     repetitions = (unsigned)atof(argv[1]); // atof to use shorthand such as 1e7
     boxcount    = (unsigned)atof(argv[2]);
+    prob    = atof(argv[3]);
     /* allocate memory for boxes */
     boxes = (unsigned*) calloc(boxcount, sizeof(boxes));        //boxen für galton-brett 
     /* get the start time */
@@ -91,16 +87,13 @@ int main( int argc, char *argv[] ) {
     srand((int)time);                                           //initialisierung fürs rand
 
     /*################ ACTUAL SIMULATION ################*/
-    f=fopen("rep500_boxcount20.txt","w");
     for( i=0; i<repetitions; ++i ) {                            //also repetitions is praktisch die anzahl der zeilen von dem galton board?
         tmpwalk = 0;                                            //aktueller box index?
         for( j=0; j<boxcount-1; ++j )
-            tmpwalk += randoffset(0.8);                         //zu tmpwalk werden immer 0 und 1 addiert- je nachdem.. wozu?!
+            tmpwalk += randoffset(prob);                         //zu tmpwalk werden immer 0 und 1 addiert- je nachdem.. wozu?!
         ++boxes[tmpwalk];
-        fprintf(f,"%d\n",boxes[tmpwalk]);                                                        //jeweils bei aktuellem i: an stelle boxes[tmpwalk] wird 1 addiert
     }                                                           //zusammenfassung: i versteh ned wozu die zeile mit tmpwalk+=randoffset() is.. =/
 
-    fclose(f);
     
     /*#################### CLEAN UP #####################*/
     time = getTimeStamp()-time;
