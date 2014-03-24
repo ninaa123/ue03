@@ -28,17 +28,17 @@
 int randoffset( void ) {
     static unsigned randInt = 1;
 
-    if( randInt == 1 ) {
-        randInt = (unsigned)rand();
-        randInt |= 1<<(sizeof(int)*8-1);
+    if( randInt == 1 ) {                        
+        randInt = (unsigned)rand();             //initialisiert randInt mit rand nummer
+        randInt |= 1<<(sizeof(int)*8-1);        //bitweises oder mit... konstanter zahl die um 1 geshiftet wurde?!
     }
 
-    randInt >>= 1;
-    return randInt & 1;
+    randInt >>= 1;                              //rand nummer eins zuweisen und shiften
+    return randInt & 1;                         //bitweises & return
 }
 
 /** Gets the current unix time in seconds but with micro seconds precision */
-double getTimeStamp(void) {
+double getTimeStamp(void) {                     //akzepier i dass des die zeit in sekunden zurück gibt.. weiß zwar ned wie aber ok
     struct timeval timestr;
     void *Tzp = 0;
     gettimeofday(&timestr, Tzp);
@@ -65,19 +65,19 @@ int main( int argc, char *argv[] ) {
     repetitions = (unsigned)atof(argv[1]); // atof to use shorthand such as 1e7
     boxcount    = (unsigned)atof(argv[2]);
     /* allocate memory for boxes */
-    boxes = (unsigned*) calloc(boxcount, sizeof(boxes));
+    boxes = (unsigned*) calloc(boxcount, sizeof(boxes));        //boxen für galton-brett 
     /* get the start time */
-    time = getTimeStamp();
+    time = getTimeStamp();                                      //start des "stoppen"
     /* seed random number generator */
-    srand((int)time);
+    srand((int)time);                                           //initialisierung fürs rand
 
     /*################ ACTUAL SIMULATION ################*/
-    for( i=0; i<repetitions; ++i ) {
-        tmpwalk = 0;
+    for( i=0; i<repetitions; ++i ) {                            //also repetitions is praktisch die anzahl der zeilen von dem galton board?
+        tmpwalk = 0;                                            //aktueller box index?
         for( j=0; j<boxcount-1; ++j )
-            tmpwalk += randoffset();
-        ++boxes[tmpwalk];
-    }
+            tmpwalk += randoffset();                            //zu tmpwalk werden immer 0 und 1 addiert- je nachdem.. wozu?!
+        ++boxes[tmpwalk];                                       //jeweils bei aktuellem i: an stelle boxes[tmpwalk] wird 1 addiert
+    }                                                           //zusammenfassung: i versteh ned wozu die zeile mit tmpwalk+=randoffset() is.. =/
 
     /*#################### CLEAN UP #####################*/
     time = getTimeStamp()-time;
