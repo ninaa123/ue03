@@ -42,11 +42,10 @@ int randoffset( void ) {
 
 double randoffset(double prob)                  //wenn nicht fix: 
 {
-    static double randInt=1.0;
-    randInt=(double)rand()/((double)RAND_MAX);
-    if(randInt*prob>0.5)
-        return 1;
-    else return 0;
+    double random=(double)rand()/((double)RAND_MAX);
+    if(random<prob)
+        return 0;
+    else return 1;
 }
 
 /** Gets the current unix time in seconds but with micro seconds precision */
@@ -90,7 +89,7 @@ int main( int argc, char *argv[] ) {
     for( i=0; i<repetitions; ++i ) {                            //also repetitions is praktisch die anzahl der zeilen von dem galton board?
         tmpwalk = 0;                                            //aktueller box index?
         for( j=0; j<boxcount-1; ++j )
-            tmpwalk += randoffset(prob);                         //zu tmpwalk werden immer 0 und 1 addiert- je nachdem.. wozu?!
+            tmpwalk += randoffset(prob);                        //zu tmpwalk werden immer 0 und 1 addiert- je nachdem.. wozu?!
         ++boxes[tmpwalk];
     }                                                           //zusammenfassung: i versteh ned wozu die zeile mit tmpwalk+=randoffset() is.. =/
 
